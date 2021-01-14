@@ -14,13 +14,14 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(signUpDto: SignUpDto): Promise<UserWithoutPassword> {
-    const hashedPassword = await bcrypt.hash(signUpDto.password, 10)
+  async signUp(signUpDto: SignUpDto): Promise<SignInResult> {
+    const { username, password } = signUpDto
+    const hashedPassword = await bcrypt.hash(password, 10)
     signUpDto.password = hashedPassword
 
-    const user = await this.usersService.create(signUpDto)
+    await this.usersService.create(signUpDto)
 
-    return this._sanitizeUser(user)
+    return this.signIn({ username, password })
   }
 
   async getAuthenticatedUser(

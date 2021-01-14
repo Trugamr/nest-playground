@@ -1,8 +1,8 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
-import { UserWithoutPassword } from 'src/users/user'
+import { User } from 'src/users/user.schema'
 
 export const GetUser = createParamDecorator(
-  (data, context: ExecutionContext): UserWithoutPassword => {
+  (data, context: ExecutionContext): User => {
     const req = context.switchToHttp().getRequest()
     return req.user
   },
