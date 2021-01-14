@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { ReturnModelType } from '@typegoose/typegoose'
 import { InjectModel } from 'nestjs-typegoose'
 import { CreateNoteDto } from './notes.dto'
-import { Note } from './notes.schema'
+import { Note } from './note.schema'
 
 @Injectable()
 export class NotesService {

@@ -4,6 +4,8 @@ import { TypegooseModule } from 'nestjs-typegoose'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { NotesModule } from './notes/notes.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 import configModuleOptions from './config/configModuleOptions'
 import createTypegooseOptions from './config/database.config'
 
@@ -16,6 +18,8 @@ import createTypegooseOptions from './config/database.config'
       inject: [ConfigService],
     }),
     NotesModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

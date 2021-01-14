@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common'
 import { CreateNoteDto } from './notes.dto'
-import { Note } from './notes.schema'
+import { Note } from './note.schema'
 import { NotesService } from './notes.service'
 
 @Controller('notes')

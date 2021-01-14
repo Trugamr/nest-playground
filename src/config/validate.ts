@@ -15,6 +15,12 @@ class EnvironmentVariables {
 
   @IsString()
   MONGODB_URI: string
+
+  @IsString()
+  JWT_SECRET: string
+
+  @IsString()
+  JWT_EXPIRY
 }
 
 const validate = (config: Record<string, unknown>) => {
