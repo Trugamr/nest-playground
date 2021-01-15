@@ -11,5 +11,12 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "public",
+    "uploads"
+  ],
+  "include": [ "src"]
 }
