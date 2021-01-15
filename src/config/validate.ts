@@ -20,7 +20,10 @@ class EnvironmentVariables {
   JWT_SECRET: string
 
   @IsString()
-  JWT_EXPIRY
+  JWT_EXPIRY: string
+
+  @IsString()
+  UPLOADS_DEST: string
 }
 
 const validate = (config: Record<string, unknown>) => {

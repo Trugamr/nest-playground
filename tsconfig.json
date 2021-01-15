@@ -12,11 +12,11 @@
     "baseUrl": "./",
     "incremental": true
   },
+  "include": ["src"],
   "exclude": [
     "node_modules",
     "dist",
     "public",
     "uploads"
   ],
-  "include": [ "src"]
 }
