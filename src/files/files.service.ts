@@ -16,18 +16,29 @@ export class FilesService {
     private readonly configService: ConfigService,
   ) {}
 
-  async createFilesWithFields(
+  async createFilesWithFields<K>(
     user: User,
-    filesWithFields: FilesWithFields<MulterFile>,
-  ): Promise<FilesWithFields<DocumentType<File>>> {
+    filesWithFields: FilesWithFields<K, MulterFile>,
+  ): Promise<FilesWithFields<K, DocumentType<File>>> {
+    // Get all available file fields from files object
     const fields = Object.keys(filesWithFields)
+
+    // Flatten object files into single files array
     const files = fields
       .map(field => filesWithFields[field])
       .reduce((acc, fileArr) => [...acc, ...fileArr], [] as MulterFile[])
+
+    // Map files array to file write and insert promises
     const filePromises = files.map(file => this.createFile(user, file))
 
+    // After all files are written and inserted in database
     const documents = await Promise.all(filePromises)
-    const documentsWithFields: FilesWithFields<DocumentType<File>> = {}
+
+    // Create similar object with fields and insert documents using the number of files each filed had
+    const documentsWithFields: FilesWithFields<
+      K,
+      DocumentType<File>
+    > = {} as FilesWithFields<K, DocumentType<File>>
 
     fields.forEach(field => {
       documentsWithFields[field] = documents.splice(

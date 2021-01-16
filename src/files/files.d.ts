@@ -7,6 +7,6 @@ declare interface MulterFile {
   size: number
 }
 
-declare interface FilesWithFields<T> {
-  [key: string]: T[]
+declare type FilesWithFields<K, T> = {
+  [key in keyof K]: T[]
 }
