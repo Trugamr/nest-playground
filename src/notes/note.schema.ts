@@ -14,8 +14,8 @@ export class Note extends TimeStamps {
   createdBy: Ref<User>
 
   @prop({ ref: File })
-  icon: Ref<File>
+  icon?: Ref<File>
 
   @prop({ ref: File })
-  background: Ref<File>
+  background?: Ref<File>
 }

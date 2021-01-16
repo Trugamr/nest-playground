@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
+import { DocumentType, Ref, ReturnModelType } from '@typegoose/typegoose'
 import { InjectModel } from 'nestjs-typegoose'
 import { CreateNoteDto, UpdateNoteDto } from './notes.dto'
 import { Note } from './note.schema'
 import { User } from 'src/users/user.schema'
-import * as mongoose from 'mongoose'
 import { FilesService } from 'src/files/files.service'
+import * as mongoose from 'mongoose'
+import { File } from 'src/files/file.schema'
 
 @Injectable()
 export class NotesService {
@@ -62,8 +63,17 @@ export class NotesService {
 
   async deleteNote(user: User, noteId: mongoose.Types.ObjectId): Promise<void> {
     const note = await this.getNotebyId(user, noteId)
+    const filesToRemove: Ref<File, mongoose.Types.ObjectId>[] = []
 
-    // Delete files if note has any files associated with it
+    if (note.icon) {
+      filesToRemove.push(note.icon)
+    }
+
+    if (note.background) {
+      filesToRemove.push(note.background)
+    }
+
+    this.filesService.removeFiles(filesToRemove)
 
     await note.deleteOne()
   }
@@ -75,6 +85,7 @@ export class NotesService {
     files?: NoteFiles,
   ): Promise<Note> {
     const note = await this.getNotebyId(user, noteId)
+    await note.populate(this.fieldsToPopulate).execPopulate()
 
     if (files) {
       const fileDocuments = await this.filesService.createFilesWithFields<NoteFiles>(
@@ -93,8 +104,6 @@ export class NotesService {
 
     Object.assign(note, updateNoteDto)
 
-    await note.save()
-
-    return note.populate(this.fieldsToPopulate).execPopulate()
+    return note.save()
   }
 }

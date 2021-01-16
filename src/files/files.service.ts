@@ -1,5 +1,10 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common'
-import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
+import {
+  DocumentType,
+  mongoose,
+  Ref,
+  ReturnModelType,
+} from '@typegoose/typegoose'
 import { InjectModel } from 'nestjs-typegoose'
 import { File } from './file.schema'
 import { v4 as uuidv4 } from 'uuid'
@@ -81,6 +86,23 @@ export class FilesService {
     return file.save()
   }
 
+  async removeFiles(
+    fileIds: Ref<File, mongoose.Types.ObjectId>[],
+  ): Promise<void> {
+    const filesToDelete = await this.fileModel.find({ _id: { $in: fileIds } })
+    const deletePromises = filesToDelete.map(({ path }) =>
+      this._deleteFile(path),
+    )
+
+    try {
+      await Promise.all(deletePromises)
+    } catch (error) {
+      console.error('FAILED TO DELETE FILES FROM DISK', error)
+    }
+
+    await this.fileModel.remove({ _id: { $in: fileIds } })
+  }
+
   /** Write file to disk
    * @param {string} path - Full path including filename
    * @param {Buffer} buffer - Buffer data to write
@@ -94,15 +116,24 @@ export class FilesService {
     }
   }
 
-  _getRandomFilename(name: string) {
+  async _deleteFile(path: string): Promise<boolean> {
+    try {
+      await fs.promises.unlink(path)
+      return true
+    } catch (error) {
+      throw new Error('Failed to delete file from disk')
+    }
+  }
+
+  private _getRandomFilename(name: string) {
     return `${uuidv4()}_${filenamify(name)}`
   }
 
-  _getDestination() {
+  private _getDestination() {
     return this.configService.get('UPLOADS_DEST')
   }
 
-  _getFilePath(destination: string, filename: string) {
+  private _getFilePath(destination: string, filename: string) {
     return path.join(destination, filename)
   }
 }
