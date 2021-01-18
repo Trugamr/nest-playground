@@ -6,7 +6,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator'
-import { Roles } from './user.schema'
+import { Role } from './user.schema'
 
 export class CreateUserDto {
   @IsString()
@@ -24,12 +24,12 @@ export class CreateUserDto {
   @MaxLength(32)
   email: string
 
-  @IsEnum(Roles, {
+  @IsEnum(Role, {
     each: true,
-    message: `Roles can have values from ${Object.keys(Roles).toString()}`,
+    message: `Roles can have values from ${Object.keys(Role).toString()}`,
   })
   @IsOptional()
-  roles?: Roles[]
+  roles?: Role[]
 
   @IsString()
   @MinLength(3)

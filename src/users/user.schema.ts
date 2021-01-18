@@ -1,6 +1,6 @@
 import { prop } from '@typegoose/typegoose'
 
-export enum Roles {
+export enum Role {
   Admin = 'Admin',
 }
 
@@ -17,8 +17,8 @@ export class User {
   @prop({ default: false })
   emailVerified: boolean
 
-  @prop({ enum: Roles, type: [String], default: [] })
-  roles: Roles[]
+  @prop({ enum: Role, type: [String], default: [] })
+  roles: Role[]
 
   @prop({ required: true, minlength: 6, maxlength: 128 })
   password: string

@@ -100,7 +100,7 @@ export class FilesService {
       console.error('FAILED TO DELETE FILES FROM DISK', error)
     }
 
-    await this.fileModel.remove({ _id: { $in: fileIds } })
+    await this.fileModel.deleteMany({ _id: { $in: fileIds } })
   }
 
   /** Write file to disk

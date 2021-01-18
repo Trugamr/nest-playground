@@ -8,4 +8,8 @@ export class AppService {
   getMessage(): string {
     return this.configService.get('MESSAGE')
   }
+
+  getAdminMessage(): string {
+    return 'Hello, Admin!'
+  }
 }
